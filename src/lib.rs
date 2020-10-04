@@ -69,19 +69,19 @@ impl FromStr for RenVM {
 pub struct RenVMMsg {
     /// Hash of the payload.
     #[builder(default = "RenVMMsgBuilder::random_bytes32()")]
-    p_hash: [u8; 32],
+    pub p_hash: [u8; 32],
     /// Amount to be minted.
     #[builder(default = "RenVMMsgBuilder::random_u64()")]
-    amount: u64,
+    pub amount: u64,
     /// Pubkey of the token.
     #[builder(default = "RenVMMsgBuilder::random_bytes32()")]
-    token: [u8; 32],
+    pub token: [u8; 32],
     /// Recipient pub key.
     #[builder(default = "RenVMMsgBuilder::random_bytes32()")]
-    to: [u8; 32],
+    pub to: [u8; 32],
     /// Hash of the nonce.
     #[builder(default = "RenVMMsgBuilder::random_bytes32()")]
-    n_hash: [u8; 32],
+    pub n_hash: [u8; 32],
 }
 impl RenVMMsgBuilder {
     fn random_bytes32() -> [u8; 32] {
