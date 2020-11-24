@@ -7,9 +7,11 @@ edition = "2018"
 [dependencies]
 borsh = "0.7.1"
 derive_builder = "0.9.0"
+digest = "0.9.0"
 libsecp256k1 = "0.3.5"
 rand = "0.7.3"
 rustc-hex = "2.1.0"
 serde = "1.0.100"
+sha3 = "0.9.1"
 thiserror = "1.0"
 tiny-keccak = { version = "2.0.0", features = ["keccak", "sha3"] }

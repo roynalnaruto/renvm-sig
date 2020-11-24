@@ -8,6 +8,7 @@ pub use util::{hash_message, keccak256};
 
 use crate::{error::RenVMError, util::to_eip155_v};
 use borsh::BorshSerialize;
+use digest::Digest;
 use rand::prelude::*;
 use rustc_hex::FromHex;
 use secp256k1::{self as Secp256k1, Message, PublicKey, SecretKey};
@@ -96,6 +97,12 @@ impl RenVmMsg {
     pub fn msg_hash(&self) -> Result<[u8; 32], RenVMError> {
         let msg_bytes = self.try_to_vec()?;
         Ok(hash_message(msg_bytes.as_slice()))
+    }
+    pub fn get_digest(&self) -> Result<[u8; 32], RenVMError> {
+        let mut hasher = sha3::Keccak256::new();
+        let msg_bytes = self.try_to_vec()?;
+        hasher.update(msg_bytes);
+        Ok(hasher.finalize().into())
     }
 }
 
