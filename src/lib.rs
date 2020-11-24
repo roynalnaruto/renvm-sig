@@ -4,10 +4,9 @@ extern crate derive_builder;
 mod error;
 mod util;
 
-use crate::{
-    error::RenVMError,
-    util::{hash_message, keccak256, to_eip155_v},
-};
+pub use util::{hash_message, keccak256};
+
+use crate::{error::RenVMError, util::to_eip155_v};
 use borsh::BorshSerialize;
 use rand::prelude::*;
 use rustc_hex::FromHex;
@@ -82,9 +81,9 @@ pub struct RenVmMsg {
     /// Amount to be minted.
     #[builder(default = "RenVmMsgBuilder::random_u64()")]
     pub amount: u64,
-    /// Pubkey of the token.
+    /// Hash of the RenVM cross-chain selector.
     #[builder(default = "RenVmMsgBuilder::random_bytes32()")]
-    pub token: [u8; 32],
+    pub s_hash: [u8; 32],
     /// Recipient pub key.
     #[builder(default = "RenVmMsgBuilder::random_bytes32()")]
     pub to: [u8; 32],
@@ -92,6 +91,20 @@ pub struct RenVmMsg {
     #[builder(default = "RenVmMsgBuilder::random_bytes32()")]
     pub n_hash: [u8; 32],
 }
+
+impl RenVmMsg {
+    pub fn msg_hash(&self) -> Result<[u8; 32], RenVMError> {
+        let msg_bytes = self.try_to_vec()?;
+        Ok(hash_message(msg_bytes.as_slice()))
+    }
+}
+
+#[derive(BorshSerialize, Clone, Debug, Builder)]
+pub struct RenVmRotateAuthorityMsg {
+    #[builder(default = "RenVmMsgBuilder::random_bytes20()")]
+    pub authority: [u8; 20],
+}
+
 impl RenVmMsgBuilder {
     fn random_bytes32() -> [u8; 32] {
         let mut data = [0u8; 32];
@@ -109,12 +122,6 @@ impl RenVmMsgBuilder {
     }
 }
 
-#[derive(BorshSerialize, Clone, Debug, Builder)]
-pub struct RenVmRotateAuthorityMsg {
-    #[builder(default = "RenVmMsgBuilder::random_bytes20()")]
-    pub authority: [u8; 20],
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -130,14 +137,14 @@ mod tests {
     #[test]
     fn test_from_bytes() {
         let sk_bytes = [1u8; 32];
-        let (p_hash, amount, token, to, n_hash) =
+        let (p_hash, amount, s_hash, to, n_hash) =
             ([0u8; 32], 0u64, [0u8; 32], [0u8; 32], [0u8; 32]);
 
         let renvm = RenVM::from_bytes(&sk_bytes).unwrap();
         let renvm_msg = RenVmMsgBuilder::default()
             .p_hash(p_hash)
             .amount(amount)
-            .token(token)
+            .s_hash(s_hash)
             .to(to)
             .n_hash(n_hash)
             .build()
@@ -148,14 +155,14 @@ mod tests {
     #[test]
     fn test_from_str() {
         let sk = "0000000000000000000000000000000000000000000000000000000000000001";
-        let (p_hash, amount, token, to, n_hash) =
+        let (p_hash, amount, s_hash, to, n_hash) =
             ([0u8; 32], 0u64, [0u8; 32], [0u8; 32], [0u8; 32]);
 
         let renvm = RenVM::from_str(sk).unwrap();
         let renvm_msg = RenVmMsgBuilder::default()
             .p_hash(p_hash)
             .amount(amount)
-            .token(token)
+            .s_hash(s_hash)
             .to(to)
             .n_hash(n_hash)
             .build()
