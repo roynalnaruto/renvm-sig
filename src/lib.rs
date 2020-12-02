@@ -47,6 +47,13 @@ impl RenVM {
     /// Signs a RenVM message.
     pub fn sign<S: BorshSerialize>(&self, msg: S) -> Result<[u8; 65], RenVMError> {
         let msg_bytes = msg.try_to_vec()?;
+        let msg_hash = keccak256(msg_bytes.as_slice());
+        let sig_msg = Message::parse_slice(&msg_hash[..])?;
+        Ok(self.sign_with_eip155(&sig_msg, None))
+    }
+    /// Signs a RenVM message according to EIP-191.
+    pub fn sign_with_eip191<S: BorshSerialize>(&self, msg: S) -> Result<[u8; 65], RenVMError> {
+        let msg_bytes = msg.try_to_vec()?;
         let msg_hash = hash_message(msg_bytes.as_slice());
         let sig_msg = Message::parse_slice(&msg_hash[..])?;
         Ok(self.sign_with_eip155(&sig_msg, None))
