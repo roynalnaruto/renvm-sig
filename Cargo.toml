@@ -5,7 +5,7 @@ authors = ["Rohit Narurkar <rohit.narurkar@protonmail.com>"]
 edition = "2018"
 
 [dependencies]
-borsh = "0.7.1"
+borsh = "0.8.1"
 derive_builder = "0.9.0"
 digest = "0.9.0"
 libsecp256k1 = "0.3.5"
