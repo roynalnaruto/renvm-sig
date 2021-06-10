@@ -1,5 +1,5 @@
-# RenVM Signatures
-A library to construct mock RenVM signatures for cross-chain lock-and-mint
+# RenVm Signatures
+A library to construct mock RenVm signatures for cross-chain lock-and-mint
 operations.
 
 # Setup
@@ -8,33 +8,33 @@ $ cargo build
 ```
 
 # Usage
-* Random RenVM secret key and message
+* Random RenVm secret key and message
 ```rust
-let renvm = RenVM::random();
-let renvm_msg = RenVMMsgBuilder::default().build().unwrap();
+let renvm = RenVm::random();
+let renvm_msg = RenVmMsgBuilder::default().build().unwrap();
 let _renvm_sig = renvm.sign(&renvm_msg).unwrap();
 ```
-* RenVM secret key from bytes
+* RenVm secret key from bytes
 ```rust
 let sk_bytes = [0u8; 32];
-let _renvm = RenVM::from_bytes(&sk_bytes).unwrap();
+let _renvm = RenVm::from_bytes(&sk_bytes).unwrap();
 ```
-* RenVM secret key from hex string
+* RenVm secret key from hex string
 ```rust
 let sk = "0x0000000000000000000000000000000000000000000000000000000000000000";
-let _renvm = RenVM::from_str(sk).unwrap();
+let _renvm = RenVm::from_str(sk).unwrap();
 ```
-* Builder pattern for RenVM message
+* Builder pattern for RenVm message
 ```rust
-// RenVM message structure
-// | p_hash | amount | token | to | n_hash |
-// |   32   |   8    |   32  | 32 |   32   |
+// RenVm message structure
+// | p_hash | amount | s_hash | to | n_hash |
+// |   32   |   8    |   32   | 32 |   32   |
 // random `to` and `n_hash`
-let (p_hash, amount, token) = ([0u8; 32], 0u64, [0u8; 32]);
-let _renvm_msg = RenVMMsgBuilder::default()
+let (p_hash, amount, s_hash) = ([0u8; 32], 0u64, [0u8; 32]);
+let _renvm_msg = RenVmMsgBuilder::default()
   .p_hash(p_hash)
   .amount(amount)
-  .token(token)
+  .s_hash(s_hash)
   .build()
   .unwrap();
 ```

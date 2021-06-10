@@ -1,8 +1,8 @@
 use thiserror::Error;
 
-/// Errors that may be returned by RenVM.
+/// Errors that may be returned by RenVm.
 #[derive(Debug, Error)]
-pub enum RenVMError {
+pub enum RenVmError {
     /// Error forwarded from libsecp256k1.
     #[error(transparent)]
     Secp256k1Error(#[from] secp256k1::Error),
@@ -11,5 +11,5 @@ pub enum RenVMError {
     RustcHexError(#[from] rustc_hex::FromHexError),
     /// Error forwarded from standard IO error.
     #[error(transparent)]
-    StdIOError(#[from] std::io::Error),
+    StdIoError(#[from] std::io::Error),
 }
