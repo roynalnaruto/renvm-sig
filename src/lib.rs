@@ -148,7 +148,7 @@ mod tests {
     fn test_from_bytes() {
         let sk_bytes = [1u8; 32];
         let (p_hash, amount, s_hash, to, n_hash) =
-            ([0u8; 32], 0u64, [0u8; 32], [0u8; 32], [0u8; 32]);
+            ([0u8; 32], [0u8; 32], [0u8; 32], [0u8; 32], [0u8; 32]);
 
         let renvm = RenVm::from_bytes(&sk_bytes).unwrap();
         let renvm_msg = RenVmMsgBuilder::default()
@@ -166,7 +166,7 @@ mod tests {
     fn test_from_str() {
         let sk = "0000000000000000000000000000000000000000000000000000000000000001";
         let (p_hash, amount, s_hash, to, n_hash) =
-            ([0u8; 32], 0u64, [0u8; 32], [0u8; 32], [0u8; 32]);
+            ([0u8; 32], [0u8; 32], [0u8; 32], [0u8; 32], [0u8; 32]);
 
         let renvm = RenVm::from_str(sk).unwrap();
         let renvm_msg = RenVmMsgBuilder::default()
